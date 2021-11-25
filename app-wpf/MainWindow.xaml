@@ -1,0 +1,192 @@
+﻿<Metro:MetroWindow x:Class="app_wpf.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:Metro="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro" 
+        xmlns:local="clr-namespace:app_wpf.Proxy" 
+        xmlns:converters="clr-namespace:app_wpf.Converters" 
+        xmlns:domain="clr-namespace:app_domain;assembly=app-domain" 
+        mc:Ignorable="d"
+        Title="MainWindow" Height="600" Width="1300">
+    <Metro:MetroWindow.Resources>
+        <Style TargetType="{x:Type GridViewColumnHeader}">
+            <Setter Property="HorizontalContentAlignment" Value="Center" />
+        </Style>
+        <local:BindingProxy x:Key="BindingProxy" Data="{Binding}"/>
+        <converters:ParamInterpreterToVisibility x:Key="ParamInterpreterToVisibility"/>
+    </Metro:MetroWindow.Resources>
+    <DockPanel>
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="410" MinWidth="250" MaxWidth="700"/>
+                <ColumnDefinition Width="4"/>
+                <ColumnDefinition Width="460" MinWidth="250" MaxWidth="700"/>
+                <ColumnDefinition Width="4"/>
+                <ColumnDefinition Width="400" MinWidth="250" MaxWidth="700"/>
+                <ColumnDefinition Width="4"/>
+                <ColumnDefinition Width="*" MinWidth="100"/>
+            </Grid.ColumnDefinitions>
+            <DockPanel Grid.Column="0">
+                <DockPanel DockPanel.Dock="Top" Height="30">
+                    <!-- control buttons for the listview here -->
+                    <TextBlock Text="Design Area" Opacity="0.6" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                </DockPanel>
+                <ListView x:Name="DesignListView"
+                          GridViewColumnHeader.Click="GridViewColumnHeaderClickedHandler"
+                          Style="{StaticResource MahApps.Styles.ListView}"
+                          ItemsSource="{Binding Designs}" 
+                          DockPanel.Dock="Top"
+                          SelectionMode="Single"
+                          SelectedItem="{Binding SelectedDesign}">
+                    <ListView.View>
+                        <GridView ColumnHeaderContainerStyle="{DynamicResource MahApps.Styles.GridViewColumnHeader}">
+                            <GridView.Columns>
+                                <GridViewColumn HeaderContainerStyle="{DynamicResource MahApps.Styles.GridViewColumnHeader}" Header="Name" Width="200">
+                                    <GridViewColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <DockPanel>
+                                                <CheckBox IsChecked="{Binding IsChecked, Mode=TwoWay}" Command="{Binding Data.CheckBoxCmd, Source={StaticResource BindingProxy}}"/>
+                                                <Expander Style="{DynamicResource MahApps.Styles.Expander}"
+                                                    DockPanel.Dock="Left"
+                                                    Header="{Binding Name}"
+                                                    ToolTip="{Binding Tooltip}">
+                                                    <StackPanel Orientation="Vertical">
+                                                        <TextBlock Text="Description"/>
+                                                        <TextBlock Text="{Binding Description}" TextWrapping="Wrap" TextTrimming="WordEllipsis" Opacity="0.6"/>
+                                                    </StackPanel>
+                                                </Expander>
+                                            </DockPanel>
+                                        </DataTemplate>
+                                    </GridViewColumn.CellTemplate>
+                                </GridViewColumn>
+                                <GridViewColumn HeaderContainerStyle="{DynamicResource MahApps.Styles.GridViewColumnHeader}" Header="Created" Width="200">
+                                    <GridViewColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <TextBlock Text="{Binding CreationDate}" TextWrapping="Wrap" TextTrimming="WordEllipsis"/>
+                                        </DataTemplate>
+                                    </GridViewColumn.CellTemplate>
+                                </GridViewColumn>
+                            </GridView.Columns>
+                        </GridView>
+                    </ListView.View>
+                    <ListView.ItemContainerStyle>
+                        <Style TargetType="{x:Type ListViewItem}" BasedOn="{StaticResource MahApps.Styles.ListViewItem}">
+                            <Setter Property="ContextMenu">
+                                <Setter.Value>
+                                    <ContextMenu>
+                                        <MenuItem  Header="{Binding Data.ContextOpen_InApp.Label,Source={StaticResource BindingProxy}}" 
+                                                   Command="{Binding Data.ContextOpen_InApp.Command,Source={StaticResource BindingProxy}}"/>
+                                        <MenuItem Header="Download">
+                                            <MenuItem Header="{Binding Data.ContextDL_Excel_xls.Label,Source={StaticResource BindingProxy}}" 
+                                                      Command="{Binding Data.ContextDL_Excel_xls.Command,Source={StaticResource BindingProxy}}"/>
+                                            <MenuItem Header="{Binding Data.ContextDL_Excel_xlsx.Label,Source={StaticResource BindingProxy}}" 
+                                                      Command="{Binding Data.ContextDL_Excel_xlsx.Command,Source={StaticResource BindingProxy}}"/>
+                                            <MenuItem Header="{Binding Data.ContextDL_Excel_csv.Label,Source={StaticResource BindingProxy}}" 
+                                                      Command="{Binding Data.ContextDL_Excel_csv.Command,Source={StaticResource BindingProxy}}"/>
+                                            <MenuItem Header="{Binding Data.ContextDL_DBq_sql.Label,Source={StaticResource BindingProxy}}" 
+                                                      Command="{Binding Data.ContextDL_DBq_sql.Command,Source={StaticResource BindingProxy}}"/>
+                                            <Separator/>
+                                            <MenuItem Header="{Binding Data.ContextDL_Ser_XML.Label,Source={StaticResource BindingProxy}}" 
+                                                      Command="{Binding Data.ContextDL_Ser_XML.Command,Source={StaticResource BindingProxy}}"/>
+                                            <MenuItem Header="{Binding Data.ContextDL_Ser_JSON.Label,Source={StaticResource BindingProxy}}" 
+                                                      Command="{Binding Data.ContextDL_Ser_JSON.Command,Source={StaticResource BindingProxy}}"/>
+                                            <Separator/>
+                                            <MenuItem Header="{Binding Data.ContextDL_Ser_BIN.Label,Source={StaticResource BindingProxy}}" 
+                                                      Command="{Binding Data.ContextDL_Ser_BIN.Command,Source={StaticResource BindingProxy}}"/>
+                                        </MenuItem>
+                                        <Separator />
+                                        <MenuItem  Header="{Binding Data.ContextOpen_Manual.Label,Source={StaticResource BindingProxy}}" 
+                                                   Command="{Binding Data.ContextOpen_Manual.Command,Source={StaticResource BindingProxy}}"/>
+                                    </ContextMenu>
+                                </Setter.Value>
+                            </Setter>
+                        </Style>
+                    </ListView.ItemContainerStyle>
+                </ListView>
+            </DockPanel>
+            <GridSplitter Grid.Column="1" Foreground="Transparent" Background="Transparent" ShowsPreview="True"/>
+            <DockPanel Grid.Column="2">
+                <DockPanel DockPanel.Dock="Top" Height="30">
+                    <!-- control buttons for the listview here -->
+                    <TextBlock Text="Programs Area" Opacity="0.6" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                </DockPanel>
+                <ListView x:Name="ProgramsListView"
+                          Style="{StaticResource MahApps.Styles.ListView}"
+                          ItemsSource="{Binding Programs}" 
+                          DockPanel.Dock="Top"
+                          SelectionMode="Single"
+                          SelectedItem="{Binding SelectedProgram}">
+                    <ListView.View>
+                        <GridView ColumnHeaderContainerStyle="{DynamicResource MahApps.Styles.GridViewColumnHeader}">
+                            <GridView.Columns>
+                                <GridViewColumn HeaderContainerStyle="{DynamicResource MahApps.Styles.GridViewColumnHeader}" Header="Name" Width="250">
+                                    <GridViewColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <DockPanel>
+                                                <Expander Style="{DynamicResource MahApps.Styles.Expander}"
+                                                    DockPanel.Dock="Left"
+                                                    Header="{Binding Name}"
+                                                    ToolTip="{Binding Tooltip}">
+                                                    <StackPanel
+                                                    Orientation="Vertical">
+                                                        <TextBlock Text="Description"/>
+                                                        <TextBlock Text="{Binding Description}" TextWrapping="Wrap" TextTrimming="WordEllipsis" Opacity="0.6"/>
+                                                    </StackPanel>
+                                                </Expander>
+                                            </DockPanel>
+                                        </DataTemplate>
+                                    </GridViewColumn.CellTemplate>
+                                </GridViewColumn>
+                                <GridViewColumn HeaderContainerStyle="{DynamicResource MahApps.Styles.GridViewColumnHeader}" Header="Created" Width="190">
+                                    <GridViewColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <TextBlock Text="{Binding CreationDate}" TextWrapping="Wrap" TextTrimming="WordEllipsis"/>
+                                        </DataTemplate>
+                                    </GridViewColumn.CellTemplate>
+                                </GridViewColumn>
+                            </GridView.Columns>
+                        </GridView>
+                    </ListView.View>
+                </ListView>
+            </DockPanel>
+            <GridSplitter Grid.Column="3" Foreground="Transparent" Background="Transparent"/>
+            <DockPanel Grid.Column="4">
+                <DockPanel DockPanel.Dock="Top" Height="30">
+                    <!-- control buttons for the listview here -->
+                    <TextBlock Text="Parameters Area" Opacity="0.6" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                </DockPanel>
+                <ScrollViewer VerticalScrollBarVisibility="Auto" DockPanel.Dock="Top" Background="#4C000000">
+                    <ItemsControl ItemsSource="{Binding SelectedProgram.Parameters}">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <DockPanel ToolTip="{Binding Tooltip}">
+                                    <TextBlock Text="{Binding Name}" FontSize="18" DockPanel.Dock="Left" Width="150" VerticalAlignment="Center" Padding="10,0,0,0"/>
+                                    <StackPanel DockPanel.Dock="Right" Height="30" Margin="5,5,5,0">
+                                        <TextBox Metro:TextBoxHelper.Watermark="{Binding Data}" 
+                                                 Visibility="{Binding ParamInterpreter, 
+                                            Converter={StaticResource ParamInterpreterToVisibility},
+                                            ConverterParameter={x:Static domain:ParameterType.IsString}}"/>
+                                        <TextBox Metro:TextBoxHelper.Watermark="{Binding Data}"
+                                                 Visibility="{Binding ParamInterpreter, 
+                                            Converter={StaticResource ParamInterpreterToVisibility},
+                                            ConverterParameter={x:Static domain:ParameterType.IsInteger}}"/>
+                                        <ComboBox ItemsSource="{Binding Data}" SelectedIndex="0"
+                                                  Visibility="{Binding ParamInterpreter, 
+                                            Converter={StaticResource ParamInterpreterToVisibility},
+                                            ConverterParameter={x:Static domain:ParameterType.IsCollection}}"/>
+                                        <ToggleButton Style="{DynamicResource MahApps.Styles.ToggleButton.Flat}" IsChecked="{Binding Data}" Content="Enabled"
+                                                      Visibility="{Binding ParamInterpreter, 
+                                            Converter={StaticResource ParamInterpreterToVisibility},
+                                            ConverterParameter={x:Static domain:ParameterType.IsBoolean}}"/>
+                                    </StackPanel>
+                                </DockPanel>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </ScrollViewer>
+            </DockPanel>
+            <GridSplitter Grid.Column="5" Foreground="Transparent" Background="Transparent"/>
+        </Grid>
+    </DockPanel>
+</Metro:MetroWindow>
