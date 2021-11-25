@@ -241,7 +241,7 @@ namespace app_wpf
             // multiselection with adding each design programs as a listviewgroup, but for demo its single select only
             if (SelectedDesign is null)
             {
-                return;
+                return; 
             }
             Programs = FillDataForPrograms(RND.Next(5, 15), SelectedDesign.Id).Select(x => MapProgramObject(x));
         }
