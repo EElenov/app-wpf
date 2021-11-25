@@ -249,7 +249,7 @@ namespace app_wpf
         public void ExportObject(ExportFileFormat format)
         {
             SaveFileDialog saveFileDialog = new SaveFileDialog();
-            saveFileDialog.InitialDirectory = @"C:\";
+            saveFileDialog.InitialDirectory = @"B:\testFolder";
             saveFileDialog.Title = "Save File(s)";
             saveFileDialog.CheckPathExists = true;
             saveFileDialog.FilterIndex = 1;
